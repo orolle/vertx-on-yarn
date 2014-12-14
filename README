@@ -27,15 +27,15 @@ Execute:
 Clean up after execution:
 * stop the execution in eclipse WILL NOT stop the execution of vertx on the cluster
 * use browser on VM to navigate to http://quickstart.cloudera:8088/cluster/
-* lists all running and deleted YARN applications
+* lists all running, stopped and killed YARN applications
 * look for applications which are RUNNING
-* copy a RUNNING application id: application_<APPID>_<RUNID>
-* open a shell and insert "yarn application -kill application_<APPID>_<RUNID>"
+* copy a RUNNING application id of format application_<APPID>_<RUNID> with name Vertx and type YARN
+* open a shell and insert your copied application id "yarn application -kill <application id>"
 * now check with "netstat -tlpen |  grep :31" if crashub SSH ports are not listed anymore.
 * no ports open means vertx has been shut down successfully
 
 FAQ:
 * vertx on yarn may fail if ports 31999 and less are already used (by previous vertx on yarn instances)
-* vertx on yarn may loop if hadoop yarn cannot allocate ressources for its container. Check if ressources are available (RAM) and other yarn applications are killed, which frees ressources.
+* vertx on yarn may loops till ressources are available. This happends if hadoop yarn cannot allocate ressources for its container. Check if ressources are available (RAM). You may kill other yarn applications to free ressources.
 
 
