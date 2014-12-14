@@ -1,0 +1,41 @@
+PoC: Vertx on Hadoop YARN
+
+Proofs that vertx is executable on hadoop yarn. 
+
+Vertx cluster is managed by hadoop yarn, 
+vertx is able to execute polyglot verticles (java script, etc.), 
+crashub SSH manages vertx platform instance per vertx platform instance
+
+Setup:
+* Download Hadoop distribution VM image CDH 5.2.x from cloudera: http://www.cloudera.com/content/cloudera/en/downloads/quickstart_vms/cdh-5-2-x.html
+* Execute VM image
+* clone this project into the VM to the folder /home/cloudera/workspace
+* switch to the project folder and execute mvn eclipse:eclipse
+* execute eclipse and add the project to your workspace (if not alread happend)
+* setup vertx on yarn is complete
+
+Execute:
+* your VM needs internet access to deploy crashub module!
+* execute main() in VertxTwillContainer.java from within eclipse which does the deployment on YARN. 
+* deployment of vertx on yarn takes some time: catch a coffee or pizza
+* see in console if "SSH on instance" and "Java script on instance" is printed
+* check	with "netstat -tlpen |  grep :31" if crashub SSH has been started: port 31999 and less.
+* connect with "ssh -p 31999 admin@127.0.0.1" on crashub on the first vertx platform instance. password is admin
+* another vertx platform instance is on port 31998. Use crashub to send messages between the 2 platform instances!
+* q.e.d.
+
+Clean up after execution:
+* stop the execution in eclipse WILL NOT stop the execution of vertx on the cluster
+* use browser on VM to navigate to http://quickstart.cloudera:8088/cluster/
+* lists all running and deleted YARN applications
+* look for applications which are RUNNING
+* copy a RUNNING application id: application_<APPID>_<RUNID>
+* open a shell and insert "yarn application -kill application_<APPID>_<RUNID>"
+* now check with "netstat -tlpen |  grep :31" if crashub SSH ports are not listed anymore.
+* no ports open means vertx has been shut down successfully
+
+FAQ:
+* vertx on yarn may fail if ports 31999 and less are already used (by previous vertx on yarn instances)
+* vertx on yarn may loop if hadoop yarn cannot allocate ressources for its container. Check if ressources are available (RAM) and other yarn applications are killed, which frees ressources.
+
+
